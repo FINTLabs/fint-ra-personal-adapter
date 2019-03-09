@@ -8,4 +8,4 @@
  * It would be a good idea to rename this package to a more describing name. For example
  * the name of the application.
  */
-package no.fint.customcode;
+package no.fint.ra;

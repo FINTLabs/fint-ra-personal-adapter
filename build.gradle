@@ -13,6 +13,7 @@ buildscript {
 
 plugins {
     id 'com.github.ben-manes.versions' version '0.21.0'
+    id "no.nils.wsdl2java" version "0.10"
 }
 
 apply plugin: 'java'
@@ -57,7 +58,7 @@ dependencies {
     compile('no.fint:fint-sse:1.4.0-rc-1')
     compile('no.fint:fint-event-model:3.0.0')
     compile('no.fint:fint-relation-model:1.1.5')
-    compile('no.fint:fint-pwfa-model:0.0.3')
+    compile('no.fint:fint-administrasjon-resource-model-java:3.1.0')
 
     /* --> Models <-- */
 
@@ -68,6 +69,24 @@ dependencies {
     testCompile('org.spockframework:spock-spring:1.1-groovy-2.4')
     testCompile('org.spockframework:spock-core:1.1-groovy-2.4')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+wsdl2java {
+    generatedWsdlDir = file('generated-sources')
+    wsdlDir = file("$projectDir/src/main/resources/")
+    locale = Locale.ENGLISH
+    wsdlsToGenerate = [
+            ['-client', '-p', 'no.fint.arkiv.p360.caze', "$projectDir/src/main/resources/wsdl/CaseService.wsdl"],
+            ['-client', '-p', 'no.fint.arkiv.p360.user', "$projectDir/src/main/resources/wsdl/UserService.wsdl"],
+            ['-client', '-p', 'no.fint.arkiv.p360.contact', "$projectDir/src/main/resources/wsdl/ContactService.wsdl"],
+            ['-client', '-p', 'no.fint.arkiv.p360.document', "$projectDir/src/main/resources/wsdl/DocumentService.wsdl"],
+            ['-client', '-p', 'no.fint.arkiv.p360.file', "$projectDir/src/main/resources/wsdl/FileService.wsdl"]
+    ]
+}
+
+wsdl2javaExt {
+    cxfVersion = '3.3.0'
+    deleteGeneratedSourcesOnClean = true
 }
 
 task copyExternalDependencies(type: Copy) {

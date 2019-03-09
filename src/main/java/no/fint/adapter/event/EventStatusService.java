@@ -3,7 +3,7 @@ package no.fint.adapter.event;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.adapter.FintAdapterProps;
-import no.fint.customcode.SupportedActions;
+import no.fint.ra.SupportedActions;
 import no.fint.event.model.DefaultActions;
 import no.fint.event.model.Event;
 import no.fint.event.model.HeaderConstants;
