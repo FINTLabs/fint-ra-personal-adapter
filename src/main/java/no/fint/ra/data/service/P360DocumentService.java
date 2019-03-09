@@ -1,15 +1,15 @@
 package no.fint.ra.data.service;
 
-import com.sun.xml.internal.ws.client.ClientTransportException;
-import no.fint.ra.data.RequestService;
 import no.fint.arkiv.p360.document.DocumentService;
 import no.fint.arkiv.p360.document.IDocumentService;
+import no.fint.ra.data.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.WebServiceException;
 
 @Service
 public class P360DocumentService {
@@ -37,7 +37,7 @@ public class P360DocumentService {
 
         try {
             documentServicePort.ping();
-        } catch (ClientTransportException e) {
+        } catch (WebServiceException e) {
             return false;
         }
 
