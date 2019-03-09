@@ -18,8 +18,7 @@ public class P360CaseService extends AbstractService {
 
     @PostConstruct
     public void init() {
-        CaseService ss = new CaseService(CaseService.WSDL_LOCATION, serviceName);
-        caseServicePort = ss.getBasicHttpBindingICaseService();
+        caseServicePort = new CaseService(CaseService.WSDL_LOCATION, serviceName).getBasicHttpBindingICaseService();
         super.addAuthentication(caseServicePort);
     }
 
