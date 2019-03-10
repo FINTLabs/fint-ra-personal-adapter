@@ -10,7 +10,7 @@ import no.fint.event.model.health.Health;
 import no.fint.event.model.health.HealthStatus;
 import no.fint.model.administrasjon.personal.PersonalActions;
 import no.fint.model.relation.FintResource;
-import no.fint.ra.data.service.P360ContactService;
+import no.fint.ra.data.service.P360ContactServiceP360;
 import no.fint.ra.data.service.P360UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class EventHandlerService {
     private EventStatusService eventStatusService;
 
     @Autowired
-    private P360ContactService p360ContactService;
+    private P360ContactServiceP360 p360ContactService;
 
     @Autowired
     private P360UserService p360UserService;

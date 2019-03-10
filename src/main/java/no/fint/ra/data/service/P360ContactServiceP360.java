@@ -1,36 +1,29 @@
 package no.fint.ra.data.service;
 
-import com.sun.xml.internal.ws.client.ClientTransportException;
+import lombok.extern.slf4j.Slf4j;
 import no.fint.arkiv.p360.contact.*;
-import no.fint.ra.data.RequestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.xml.namespace.QName;
-import javax.xml.ws.BindingProvider;
+import javax.xml.ws.WebServiceException;
 import java.util.List;
 
+@Slf4j
 @Service
-public class P360ContactService {
-
-
-    private static final QName SERVICE_NAME = new QName("http://software-innovation.com/SI.Data", "ContactService");
+public class P360ContactServiceP360 extends P360AbstractService {
 
     private IContactService contactServicePort;
     private ObjectFactory objectFactory;
 
-    @Autowired
-    private RequestService requestService;
+    public P360ContactServiceP360() {
+        super("http://software-innovation.com/SI.Data", "ContactService");
+    }
 
     @PostConstruct
     private void init() {
 
-        ContactService ss = new ContactService(ContactService.WSDL_LOCATION, SERVICE_NAME);
-        contactServicePort = ss.getBasicHttpBindingIContactService();
-
-        BindingProvider bp = (BindingProvider) contactServicePort;
-        requestService.addAuthentication(bp.getRequestContext());
+        contactServicePort = new ContactService(ContactService.WSDL_LOCATION, serviceName).getBasicHttpBindingIContactService();
+        super.addAuthentication(contactServicePort);
 
         objectFactory = new ObjectFactory();
     }
@@ -39,7 +32,8 @@ public class P360ContactService {
 
         try {
             contactServicePort.ping();
-        } catch (ClientTransportException e) {
+        } catch (WebServiceException e) {
+            log.warn(e.getMessage());
             return false;
         }
 
@@ -50,7 +44,6 @@ public class P360ContactService {
         GetContactPersonsParameter getContactPersonsParameter = objectFactory.createGetContactPersonsParameter();
         getContactPersonsParameter.setRecno(objectFactory.createGetContactPersonsParameterRecno(100003));
         GetContactPersonsResult contactPersons = contactServicePort.getContactPersons(getContactPersonsParameter);
-        System.out.println("hei");
     }
 
     public ContactPersonResult getContactPerson(int recno) {

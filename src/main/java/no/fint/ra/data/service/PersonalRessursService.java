@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PersonalRessursService extends FintServiceAbstract {
+public class PersonalRessursService extends FintAbstractService {
 
 
     @Autowired
     private P360UserService p360UserService;
 
     @Autowired
-    private P360ContactService p360ContactService;
+    private P360ContactServiceP360 p360ContactService;
 
     public PersonalressursResources getPersonalressurs() {
 

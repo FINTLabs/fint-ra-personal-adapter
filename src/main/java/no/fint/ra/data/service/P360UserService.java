@@ -1,47 +1,40 @@
 package no.fint.ra.data.service;
 
-import com.sun.xml.internal.ws.client.ClientTransportException;
+import lombok.extern.slf4j.Slf4j;
 import no.fint.arkiv.p360.user.*;
-import no.fint.ra.data.RequestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.xml.namespace.QName;
-import javax.xml.ws.BindingProvider;
+import javax.xml.ws.WebServiceException;
 import java.util.List;
 
+@Slf4j
 @Service
-public class P360UserService {
+public class P360UserService extends P360AbstractService {
 
-    private static final QName SERVICE_NAME = new QName("http://software-innovation.com/SI.Data", "UserService");
 
     private IUserService userServicePort;
 
     private ObjectFactory objectFactory;
 
-    @Autowired
-    private RequestService requestService;
+
+    public P360UserService() {
+        super("http://software-innovation.com/SI.Data", "UserService");
+    }
 
     @PostConstruct
     private void init() {
-
-        UserService userService = new UserService(UserService.WSDL_LOCATION, SERVICE_NAME);
-        userServicePort = userService.getBasicHttpBindingIUserService();
-
-        BindingProvider bp = (BindingProvider) userServicePort;
-        requestService.addAuthentication(bp.getRequestContext());
-
+        userServicePort = new UserService(UserService.WSDL_LOCATION, serviceName).getBasicHttpBindingIUserService();
+        super.addAuthentication(userServicePort);
         objectFactory = new ObjectFactory();
-
-
     }
 
     public boolean ping() {
 
         try {
             userServicePort.ping();
-        } catch (ClientTransportException e) {
+        } catch (WebServiceException e) {
+            log.warn(e.getMessage());
             return false;
         }
         return true;

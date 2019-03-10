@@ -12,24 +12,22 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 
 @Service
-public class P360FileService {
+public class P360FileService extends P360AbstractService {
 
 
     private static final QName SERVICE_NAME = new QName("http://software-innovation.com/SI.Data", "FileService");
 
     private IFileService fileServicePort;
 
-    @Autowired
-    private RequestService requestService;
+    public P360FileService() {
+        super("http://software-innovation.com/SI.Data", "FileService");
+    }
 
     @PostConstruct
     private void init() {
 
-        FileService ss = new FileService(FileService.WSDL_LOCATION, SERVICE_NAME);
-        fileServicePort = ss.getBasicHttpBindingIFileService();
-
-        BindingProvider bp = (BindingProvider) fileServicePort;
-        requestService.addAuthentication(bp.getRequestContext());
+        fileServicePort = new FileService(FileService.WSDL_LOCATION, SERVICE_NAME).getBasicHttpBindingIFileService();
+        super.addAuthentication(fileServicePort);
 
     }
 

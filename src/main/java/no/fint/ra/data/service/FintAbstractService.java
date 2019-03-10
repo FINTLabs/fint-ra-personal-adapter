@@ -6,7 +6,7 @@ import no.fint.arkiv.p360.contact.PrivatePersonBase;
 import no.fint.arkiv.p360.contact.PrivatePersonResult;
 import no.fint.arkiv.p360.user.UserBase;
 
-abstract class FintServiceAbstract {
+abstract class FintAbstractService {
 
 
     boolean hasNin(PrivatePersonBase privatePerson) {
@@ -30,7 +30,7 @@ abstract class FintServiceAbstract {
 
     }
 
-    ContactPersonResult getContactPerson(UserBase userBase, P360ContactService p360ContactService) {
+    ContactPersonResult getContactPerson(UserBase userBase, P360ContactServiceP360 p360ContactService) {
 
         int recNo = getRecNo(userBase.getContactExternalId().getValue());
 
@@ -40,7 +40,7 @@ abstract class FintServiceAbstract {
         return null;
     }
 
-    PrivatePersonResult getPrivatePerson(ContactPersonBase contactPerson, P360ContactService p360ContactService) {
+    PrivatePersonResult getPrivatePerson(ContactPersonBase contactPerson, P360ContactServiceP360 p360ContactService) {
 
         if (contactPerson != null) {
             PrivatePersonResult privatePerson = p360ContactService.getPrivatePerson(getFullname(contactPerson));
