@@ -1,12 +1,12 @@
 package no.fint.ra.data.service;
 
-import com.sun.xml.internal.ws.client.ClientTransportException;
 import no.fint.arkiv.p360.file.FileService;
 import no.fint.arkiv.p360.file.IFileService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.xml.namespace.QName;
+import javax.xml.ws.WebServiceException;
 
 @Service
 public class P360FileService extends P360AbstractService {
@@ -32,7 +32,7 @@ public class P360FileService extends P360AbstractService {
 
         try {
             fileServicePort.ping();
-        } catch (ClientTransportException e) {
+        } catch (WebServiceException e) {
             return false;
         }
 
