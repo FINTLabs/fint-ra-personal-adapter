@@ -4,17 +4,27 @@ import no.fint.adapter.event.EventResponseService
 import no.fint.adapter.event.EventStatusService
 import no.fint.event.model.DefaultActions
 import no.fint.event.model.Event
+import no.fint.ra.data.service.P360ContactServiceP360
+import no.fint.ra.data.service.P360UserService
 import spock.lang.Specification
 
 class EventHandlerServiceSpec extends Specification {
     private EventHandlerService eventHandlerService
     private EventStatusService eventStatusService
     private EventResponseService eventResponseService
+    private P360UserService p360UserService
+    private P360ContactServiceP360 p360ContactServiceP360
 
     void setup() {
         eventStatusService = Mock(EventStatusService)
         eventResponseService = Mock(EventResponseService)
-        eventHandlerService = new EventHandlerService(eventStatusService: eventStatusService, eventResponseService: eventResponseService)
+        p360UserService = Mock(P360UserService)
+        p360ContactServiceP360 = Mock(P360ContactServiceP360)
+        eventHandlerService = new EventHandlerService(eventStatusService: eventStatusService,
+                eventResponseService: eventResponseService,
+                p360ContactService: p360ContactServiceP360,
+                p360UserService: p360UserService
+        )
     }
 
     def "Post response on health check"() {
