@@ -9,9 +9,12 @@ import no.fint.event.model.Status;
 import no.fint.event.model.health.Health;
 import no.fint.event.model.health.HealthStatus;
 import no.fint.model.administrasjon.personal.PersonalActions;
-import no.fint.model.relation.FintResource;
+import no.fint.model.felles.FellesActions;
+import no.fint.model.resource.FintLinks;
+import no.fint.ra.data.service.DataService;
 import no.fint.ra.data.service.P360ContactServiceP360;
 import no.fint.ra.data.service.P360UserService;
+import no.fint.ra.data.service.PersonalRessursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,13 +37,16 @@ public class EventHandlerService {
     @Autowired
     private P360UserService p360UserService;
 
+    @Autowired
+    private DataService dataService;
+
 
     public void handleEvent(Event event) {
         if (event.isHealthCheck()) {
             postHealthCheckResponse(event);
         } else {
             if (eventStatusService.verifyEvent(event).getStatus() == Status.ADAPTER_ACCEPTED) {
-                Event<FintResource> responseEvent = new Event<>(event);
+                Event<FintLinks> responseEvent = new Event<>(event);
                 try {
 
                     createEventResponse(event, responseEvent);
@@ -58,9 +64,28 @@ public class EventHandlerService {
     }
 
 
-    private void createEventResponse(Event event, Event<FintResource> responseEvent) {
-        switch (PersonalActions.valueOf(event.getAction())) {
+    private void createEventResponse(Event event, Event<FintLinks> responseEvent) {
+        if (PersonalActions.getActions().contains(event.getAction())) {
+            if (PersonalActions.valueOf(event.getAction()) == PersonalActions.GET_ALL_PERSONALRESSURS) {
+                onGetAllPersonalressurs(responseEvent);
+            }
+        }
+        else if (FellesActions.getActions().contains(event.getAction())) {
+            if (FellesActions.valueOf(event.getAction()) == FellesActions.GET_ALL_PERSON) {
+                onGetAllPerson(responseEvent);
+            }
+        }
+    }
 
+    private void onGetAllPerson(Event<FintLinks> responseEvent) {
+        if (dataService.isReady()) {
+            dataService.getPersonResources().getContent().forEach(responseEvent::addData);
+        }
+    }
+
+    private void onGetAllPersonalressurs(Event<FintLinks> responseEvent) {
+        if (dataService.isReady()) {
+            dataService.getPersonalressursResources().getContent().forEach(responseEvent::addData);
         }
     }
 

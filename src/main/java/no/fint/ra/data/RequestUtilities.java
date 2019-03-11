@@ -7,7 +7,7 @@ import javax.xml.ws.BindingProvider;
 import java.util.Map;
 
 @Component
-public class RequestService {
+public class RequestUtilities {
 
     @Autowired
     private AppProps appProps;

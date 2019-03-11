@@ -1,18 +1,22 @@
 package no.fint.ra.data;
 
-import no.fint.model.administrasjon.personal.Personalressurs;
-import no.fint.model.felles.Person;
-import no.fint.model.felles.kompleksedatatyper.Identifikator;
-import no.fint.model.felles.kompleksedatatyper.Personnavn;
-import no.fint.model.resource.Link;
-import no.fint.model.resource.administrasjon.personal.PersonalressursResource;
-import no.fint.model.resource.felles.PersonResource;
 import no.fint.arkiv.p360.contact.ContactPersonBase;
 import no.fint.arkiv.p360.contact.ContactPersonResult;
 import no.fint.arkiv.p360.contact.PrivatePersonBase;
 import no.fint.arkiv.p360.contact.PrivatePersonResult;
+import no.fint.model.administrasjon.personal.Personalressurs;
+import no.fint.model.felles.Person;
+import no.fint.model.felles.kompleksedatatyper.Identifikator;
+import no.fint.model.felles.kompleksedatatyper.Periode;
+import no.fint.model.felles.kompleksedatatyper.Personnavn;
+import no.fint.model.resource.Link;
+import no.fint.model.resource.administrasjon.personal.PersonalressursResource;
+import no.fint.model.resource.felles.PersonResource;
 
-public enum  FintFactory {
+import java.util.Calendar;
+import java.util.Date;
+
+public enum FintFactory {
     ;
 
     public static PersonResource createPerson(PrivatePersonBase privatePerson, ContactPersonBase contactPerson) {
@@ -23,7 +27,12 @@ public enum  FintFactory {
         personnavn.setFornavn(contactPerson.getFirstName().getValue());
         personnavn.setEtternavn(contactPerson.getLastName().getValue());
         personResource.setNavn(personnavn);
-        personResource.addSelf(Link.with(Person.class, "fodeselsnummer", nin.getIdentifikatorverdi()));
+        personResource.addSelf(Link.with(Person.class, "fodselsnummer", nin.getIdentifikatorverdi()));
+        personResource.addPersonalressurs(
+                Link.with(Personalressurs.class, "ansattnummer",
+                        FintFactory.maskId(privatePerson.getExternalID().getValue())
+                )
+        );
 
         return personResource;
     }
@@ -35,6 +44,12 @@ public enum  FintFactory {
 
         personalressursResource.setAnsattnummer(ansattnummer);
         personalressursResource.setSystemId(systemId);
+        Periode ansettelsesperiode = new Periode();
+        ansettelsesperiode.setStart(contactPerson.getCreatedDate().toGregorianCalendar().getTime());
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2099, 00, 01);
+        ansettelsesperiode.setSlutt(calendar.getTime());
+        personalressursResource.setAnsettelsesperiode(ansettelsesperiode);
 
         personalressursResource.addPerson(Link.with(Person.class, "fodselsnummer", privatePerson.getExternalID().getValue()));
         personalressursResource.addSelf(Link.with(Personalressurs.class, "ansattnummer", ansattnummer.getIdentifikatorverdi()));

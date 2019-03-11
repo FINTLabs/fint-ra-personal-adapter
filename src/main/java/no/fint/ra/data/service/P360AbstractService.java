@@ -1,6 +1,6 @@
 package no.fint.ra.data.service;
 
-import no.fint.ra.data.RequestService;
+import no.fint.ra.data.RequestUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.namespace.QName;
@@ -9,7 +9,7 @@ import javax.xml.ws.BindingProvider;
 public abstract class P360AbstractService {
 
     @Autowired
-    protected RequestService requestService;
+    protected RequestUtilities requestUtilities;
 
     final QName serviceName;
 
@@ -19,6 +19,6 @@ public abstract class P360AbstractService {
 
     void addAuthentication(Object port) {
         BindingProvider bp = (BindingProvider) port;
-        requestService.addAuthentication(bp.getRequestContext());
+        requestUtilities.addAuthentication(bp.getRequestContext());
     }
 }
